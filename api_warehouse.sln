@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.33801.198
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{A31E9358-CF50-45C4-9B0F-FCCA8BFBAA3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logica", "Logiac\Logica.csproj", "{D412BC1A-E24F-4758-9563-BBB749EC296C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logica", "Logica\Logica.csproj", "{D412BC1A-E24F-4758-9563-BBB749EC296C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Datos", "Datos\Datos.csproj", "{A4C15B09-A7E0-460D-8A46-62A9DC78C0C2}"
 EndProject

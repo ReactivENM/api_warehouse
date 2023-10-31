@@ -278,7 +278,7 @@
       <Project>{a4c15b09-a7e0-460d-8a46-62a9dc78c0c2}</Project>
       <Name>Datos</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Logiac\Logica.csproj">
+    <ProjectReference Include="..\Logica\Logica.csproj">
       <Project>{d412bc1a-e24f-4758-9563-bbb749ec296c}</Project>
       <Name>Logica</Name>
     </ProjectReference>
