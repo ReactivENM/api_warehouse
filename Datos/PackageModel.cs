@@ -39,7 +39,7 @@ namespace Datos
 
         public PackageModel GetPackage(String id)
         {
-            this.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_interno = '{id}'";
+            this.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_interno = '{id}' OR id_externo = '{id}'";
             this.Reader = this.Command.ExecuteReader();
 
             PackageModel p = new PackageModel();
@@ -175,16 +175,20 @@ namespace Datos
 
         public string AssignToLot(string IdPaquete, string IdLote, string IdUsuario)
         {
-            this.Command.CommandText = $"SELECT * " + $"FROM paquetelote WHERE id_interno_paquete = '{IdPaquete}'";
+            this.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_externo = '{IdPaquete}'";
+            this.Reader = this.Command.ExecuteReader();
+
+            if (!this.Reader.HasRows) return "El paquete no existe!";
+            this.Reader.Close();
+
+            this.Command.CommandText = $"SELECT * " + $"FROM paquetelote WHERE id_externo_paquete = '{IdPaquete}'";
             this.Reader = this.Command.ExecuteReader();
         
             if (this.Reader.HasRows) return "El paquete ya está asignado a un lote!";
             this.Reader.Close();
 
-            PackageModel p = new PackageModel();
-
             this.Command.CommandText =
-            $"INSERT INTO paquetelote (id_interno_paquete, id_lote, id_usuario) " +
+            $"INSERT INTO paquetelote (id_externo_paquete, id_lote, id_usuario) " +
             $"VALUES ('{IdPaquete}','{IdLote}','{IdUsuario}')";
 
             this.Command.ExecuteNonQuery();
@@ -193,7 +197,7 @@ namespace Datos
 
         public string UnassignFromLot(string IdPaquete)
         {
-            this.Command.CommandText = $"SELECT * " + $"FROM paquetelote WHERE id_interno_paquete = '{IdPaquete}'";
+            this.Command.CommandText = $"SELECT * " + $"FROM paquetelote WHERE id_externo_paquete = '{IdPaquete}'";
             this.Reader = this.Command.ExecuteReader();
             if (this.Reader.HasRows)
             {
@@ -201,7 +205,7 @@ namespace Datos
                 PackageModel p = new PackageModel();
 
                 this.Command.CommandText =
-                $"DELETE " + $"FROM paquetelote WHERE id_interno_paquete = '{IdPaquete}'";
+                $"DELETE " + $"FROM paquetelote WHERE id_externo_paquete = '{IdPaquete}'";
 
                 this.Command.ExecuteNonQuery();
                 return "Paquete liberado del lote exitosamente!";

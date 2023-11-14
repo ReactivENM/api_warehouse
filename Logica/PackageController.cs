@@ -38,6 +38,7 @@ namespace Logica
         public static List<Dictionary<string, string>> GetPackage(string id)
         {
             PackageModel p = new PackageModel().GetPackage(id);
+            if (p == null) return null;
             List<Dictionary<string, string>> resultado = new List<Dictionary<string, string>>();
             Dictionary<string, string> elemento = new Dictionary<string, string>();
             elemento.Add("Id", p.Id.ToString());
