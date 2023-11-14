@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientController.cs" />
     <Compile Include="LotController.cs" />
     <Compile Include="PackageController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
