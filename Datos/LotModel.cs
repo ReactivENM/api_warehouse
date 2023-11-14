@@ -116,8 +116,7 @@ namespace Datos
             {
                 this.Reader.Close();
 
-                this.Command.CommandText =
-                $"DELETE " + $"FROM lote WHERE id = '{IdLote}'";
+                this.Command.CommandText = $"DELETE " + $"FROM lote WHERE id = '{IdLote}'";
 
                 this.Command.ExecuteNonQuery();
                 return "Lote eliminado!";

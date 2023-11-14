@@ -51,7 +51,7 @@ namespace API.Controllers
         }
 
         [Route("api/lot/{IdLote}")]
-        public IHttpActionResult Delete([FromBody]string IdLote)
+        public IHttpActionResult Delete([FromUri]string IdLote)
         {
             return Ok(Logica.LotController.Delete(IdLote));
         }
