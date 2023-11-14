@@ -89,6 +89,30 @@ namespace Logica
 
         }
 
+        public static List<Dictionary<string, string>> GetPackagesFromLot(string IdLote)
+        {
+            PackageModel package = new PackageModel();
+            List<PackageModel> _p = package.GetPackagesFromLot(IdLote);
+
+            List<Dictionary<string, string>> resultado = new List<Dictionary<string, string>>();
+
+            foreach (PackageModel p in _p)
+            {
+                Dictionary<string, string> elemento = new Dictionary<string, string>();
+                elemento.Add("Id", p.Id.ToString());
+                elemento.Add("Id_Externo", p.IdExterno.ToString());
+                elemento.Add("Id_Cliente", p.IdCliente.ToString());
+                elemento.Add("Peso", p.Peso);
+                elemento.Add("Dir_Envio", p.DirEnvio);
+                elemento.Add("Estado", p.Estado);
+
+                resultado.Add(elemento);
+            }
+            return resultado;
+
+
+        }
+
         public static string AssignToLot(string IdPaquete, string IdLote, string IdUsuario)
         {
             if (GetPackage(IdPaquete) == null) return "Paquete no existe!";

@@ -45,6 +45,12 @@ namespace API.Controllers
             return Ok(Logica.LotController.Delete(IdLote));
         }
 
+        [Route("api/lot/packages/{IdLote}")]
+        public IHttpActionResult GetPackagesFromLot([FromUri]string IdLote)
+        {
+            return Ok(Logica.PackageController.GetPackagesFromLot(IdLote));
+        }
+
         [Route("api/lot/assign")]
         public IHttpActionResult Post([FromBody]AssignLotToTruck assignData)
         {
