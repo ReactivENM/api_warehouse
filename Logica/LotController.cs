@@ -53,6 +53,12 @@ namespace Logica
 
         }
 
+        public static object Update(string IdLote, LotModel lot)
+        {
+            LotModel l = new LotModel();
+            return l.UpdateLot(IdLote, lot);
+        }
+
         public static string AssignToTruck(string IdLote, string IdCamion)
         {
             if (GetLot(IdLote) == null) return "Lote no existe!";

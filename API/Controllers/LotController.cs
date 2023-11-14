@@ -40,6 +40,17 @@ namespace API.Controllers
         }
 
         [Route("api/lot/{IdLote}")]
+        public IHttpActionResult Put([FromUri]string IdLote, [FromBody]LotModel lot)
+        {
+            Datos.LotModel _lot = new Datos.LotModel
+            {
+                IdAlmacen = lot.IdAlmacen,
+                Estado = lot.Estado
+            };
+            return Ok(Logica.LotController.Update(IdLote, _lot));
+        }
+
+        [Route("api/lot/{IdLote}")]
         public IHttpActionResult Delete([FromBody]string IdLote)
         {
             return Ok(Logica.LotController.Delete(IdLote));

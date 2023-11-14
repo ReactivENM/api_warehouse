@@ -127,6 +127,11 @@ namespace Datos
 
         public string UpdateLot(String IdLote, LotModel lot)
         {
+            this.Command.CommandText = $"SELECT * FROM almacen WHERE id = '{lot.IdAlmacen}'";
+            this.Reader = this.Command.ExecuteReader();
+            if (!this.Reader.HasRows) return "El almacen ingresado no existe!";
+            this.Reader.Close();
+
             this.Command.CommandText = $"SELECT * FROM lote WHERE id = '{IdLote}'";
             this.Reader = this.Command.ExecuteReader();
             if (this.Reader.HasRows)
