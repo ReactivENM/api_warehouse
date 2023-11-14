@@ -35,10 +35,17 @@ namespace Logica
             return p.UpdatePackage(IdPaquete, pkg);
         }
 
-        public static PackageModel GetPackage(string id)
+        public static Dictionary<string, string> GetPackage(string id)
         {
-            PackageModel p = new PackageModel();
-            return p.GetPackage(id);
+            PackageModel p = new PackageModel().GetPackage(id);
+            Dictionary<string, string> elemento = new Dictionary<string, string>();
+            elemento.Add("Id", p.Id.ToString());
+            elemento.Add("Id_Externo", p.IdExterno.ToString());
+            elemento.Add("Id_Cliente", p.IdCliente.ToString());
+            elemento.Add("Peso", p.Peso);
+            elemento.Add("Dir_Envio", p.DirEnvio);
+            elemento.Add("Estado", p.Estado);
+            return elemento;
         }
 
         public static List<Dictionary<string, string>> GetAll()
