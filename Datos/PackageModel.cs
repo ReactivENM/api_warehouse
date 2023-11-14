@@ -84,6 +84,30 @@ namespace Datos
             return resultado;
         }
 
+        public List<PackageModel> GetAllUnassignedPackages()
+        {
+            this.Command.CommandText = "SELECT * FROM paquete WHERE id_externo NOT IN(SELECT id_externo_paquete FROM paquetelote)";
+            this.Reader = this.Command.ExecuteReader();
+
+            List<PackageModel> resultado = new List<PackageModel>();
+
+            while (this.Reader.Read())
+            {
+                PackageModel elemento = new PackageModel
+                {
+                    Id = Int32.Parse(this.Reader["id_interno"].ToString()),
+                    IdExterno = this.Reader["id_externo"].ToString(),
+                    IdCliente = this.Reader["id_cliente"].ToString(),
+                    Peso = this.Reader["peso"].ToString(),
+                    DirEnvio = this.Reader["dir_envio"].ToString(),
+                    Estado = this.Reader["estado"].ToString()
+                };
+                resultado.Add(elemento);
+            }
+
+            return resultado;
+        }
+        
         public string DeletePackage(string IdPaquete)
         {
             this.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_interno = '{IdPaquete}'";

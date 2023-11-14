@@ -16,6 +16,12 @@ namespace API.Controllers
             return Ok(Logica.PackageController.GetAll());
         }
 
+        [Route("api/package/unassigned")]
+        public IHttpActionResult GetAllUnassignedPackages()
+        {
+            return Ok(Logica.PackageController.GetAllUnassignedPackages());
+        }
+
         [Route("api/package/{id}")]
         public IHttpActionResult GetPackageById([FromUri] string id)
         {
