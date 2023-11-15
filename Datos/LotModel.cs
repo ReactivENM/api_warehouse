@@ -95,7 +95,7 @@ namespace Datos
 
         public List<LotModel> GetAllUnassignedLots()
         {
-            this.Command.CommandText = "SELECT * FROM lote WHERE id NOT IN(SELECT id_lote FROM camionlote)";
+            this.Command.CommandText = "SELECT * FROM lote WHERE id NOT IN(SELECT id_lote FROM camionlote) AND estado = 'en_espera'";
             this.Reader = this.Command.ExecuteReader();
 
             List<LotModel> resultado = new List<LotModel>();
