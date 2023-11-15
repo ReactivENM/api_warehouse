@@ -65,5 +65,29 @@ namespace Datos
                 return resultado;
             }
         }
+
+        public TruckModel GetTruckByUser(int IdUsuario)
+        {
+            using (Model model = new Model())
+            {
+                model.Command.CommandText = $"SELECT * " + $"FROM camion WHERE id IN(SELECT id_camion FROM usuariocamion WHERE id_usuario = '{IdUsuario}')";
+                model.Reader = model.Command.ExecuteReader();
+
+                TruckModel t = new TruckModel();
+
+                if (model.Reader.HasRows)
+                {
+                    model.Reader.Read();
+                    t.Id = Int32.Parse(model.Reader["id"].ToString());
+                    t.Marca = model.Reader["marca"].ToString();
+                    t.Modelo = model.Reader["modelo"].ToString();
+                    t.Matricula = model.Reader["matricula"].ToString();
+                    t.Capacidad = model.Reader["capacidad"].ToString();
+                    return t;
+                }
+
+                return null;
+            }
+        }
     }
 }

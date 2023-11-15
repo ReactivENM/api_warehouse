@@ -36,5 +36,11 @@ namespace Logica
             }
             return resultado;
         }
+
+        public static TruckModel GetTruckByUser(int IdUsuario)
+        {
+            TruckModel t = new TruckModel();
+            return t.GetTruckByUser(IdUsuario);
+        }
     }
 }

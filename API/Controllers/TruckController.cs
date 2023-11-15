@@ -28,5 +28,17 @@ namespace API.Controllers
             return Ok(t);
         }
 
+        [Route("api/truck/by_user/{IdUsuario}")]
+        public IHttpActionResult GetTruckById([FromUri] int IdUsuario)
+        {
+            var t = Logica.TruckController.GetTruckByUser(IdUsuario);
+            if (t == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(t);
+        }
+
     }
 }
