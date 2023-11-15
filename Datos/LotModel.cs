@@ -72,6 +72,27 @@ namespace Datos
             return resultado;
         }
 
+        public List<LotModel> GetAllUnassignedLots()
+        {
+            this.Command.CommandText = "SELECT * FROM lote WHERE id NOT IN(SELECT id_lote FROM camionlote)";
+            this.Reader = this.Command.ExecuteReader();
+
+            List<LotModel> resultado = new List<LotModel>();
+
+            while (this.Reader.Read())
+            {
+                LotModel elemento = new LotModel
+                {
+                    Id = Int32.Parse(this.Reader["id"].ToString()),
+                    IdAlmacen = this.Reader["id_almacen"].ToString(),
+                    Estado = this.Reader["estado"].ToString()
+                };
+                resultado.Add(elemento);
+            }
+
+            return resultado;
+        }
+
         public string AssignLotToTruck(string IdLote, string IdCamion)
         {
             this.Command.CommandText = $"SELECT * " + $"FROM camionlote WHERE id_lote = '{IdLote}'";
