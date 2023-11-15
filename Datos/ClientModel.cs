@@ -17,45 +17,50 @@ namespace Datos
 
         public ClientModel GetClient(String id)
         {
-            this.Command.CommandText = $"SELECT * " + $"FROM cliente WHERE id = '{id}'";
-            this.Reader = this.Command.ExecuteReader();
-
-            ClientModel c = new ClientModel();
-
-            if (this.Reader.HasRows)
+            using (this.Connection)
             {
-                this.Reader.Read();
-                c.Id = Int32.Parse(this.Reader["id"].ToString());
-                c.Nombre = this.Reader["nombre"].ToString();
-                c.Calle = this.Reader["calle"].ToString();
-                c.Telefono = this.Reader["telefono"].ToString();
-                return c;
+                this.Command.CommandText = $"SELECT * " + $"FROM cliente WHERE id = '{id}'";
+                this.Reader = this.Command.ExecuteReader();
+
+                ClientModel c = new ClientModel();
+
+                if (this.Reader.HasRows)
+                {
+                    this.Reader.Read();
+                    c.Id = Int32.Parse(this.Reader["id"].ToString());
+                    c.Nombre = this.Reader["nombre"].ToString();
+                    c.Calle = this.Reader["calle"].ToString();
+                    c.Telefono = this.Reader["telefono"].ToString();
+                    return c;
+                }
+
+                return null;
             }
-
-            return null;
-
         }
 
         public List<ClientModel> GetAllClients()
         {
-            this.Command.CommandText = "SELECT * FROM cliente";
-            this.Reader = this.Command.ExecuteReader();
-
-            List<ClientModel> resultado = new List<ClientModel>();
-
-            while (this.Reader.Read())
+            using (this.Connection)
             {
-                ClientModel elemento = new ClientModel
-                {
-                    Id = Int32.Parse(this.Reader["id"].ToString()),
-                    Nombre = this.Reader["nombre"].ToString(),
-                    Calle = this.Reader["calle"].ToString(),
-                    Telefono = this.Reader["telefono"].ToString()
-                };
-                resultado.Add(elemento);
-            }
+                this.Command.CommandText = "SELECT * FROM cliente";
+                this.Reader = this.Command.ExecuteReader();
 
-            return resultado;
+                List<ClientModel> resultado = new List<ClientModel>();
+
+                while (this.Reader.Read())
+                {
+                    ClientModel elemento = new ClientModel
+                    {
+                        Id = Int32.Parse(this.Reader["id"].ToString()),
+                        Nombre = this.Reader["nombre"].ToString(),
+                        Calle = this.Reader["calle"].ToString(),
+                        Telefono = this.Reader["telefono"].ToString()
+                    };
+                    resultado.Add(elemento);
+                }
+
+                return resultado;
+            }
         }
     }
 }

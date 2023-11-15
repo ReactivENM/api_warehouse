@@ -20,51 +20,56 @@ namespace Datos
 
         public WarehouseModel GetWarehouse(String id)
         {
-            this.Command.CommandText = $"SELECT * " + $"FROM almacen WHERE id = '{id}'";
-            this.Reader = this.Command.ExecuteReader();
-
-            WarehouseModel c = new WarehouseModel();
-
-            if (this.Reader.HasRows)
+            using (this.Connection)
             {
-                this.Reader.Read();
-                c.Id = Int32.Parse(this.Reader["id"].ToString());
-                c.Descripcion = this.Reader["descripcion"].ToString();
-                c.Calle = this.Reader["calle"].ToString();
-                c.NroPuerta = this.Reader["nro_puerta"].ToString();
-                c.CodPostal = this.Reader["cod_postal"].ToString();
-                c.Capacidad = Int32.Parse(this.Reader["capacidad"].ToString());
-                c.Departamento = this.Reader["departamento"].ToString();
-                return c;
+                this.Command.CommandText = $"SELECT * " + $"FROM almacen WHERE id = '{id}'";
+                this.Reader = this.Command.ExecuteReader();
+
+                WarehouseModel c = new WarehouseModel();
+
+                if (this.Reader.HasRows)
+                {
+                    this.Reader.Read();
+                    c.Id = Int32.Parse(this.Reader["id"].ToString());
+                    c.Descripcion = this.Reader["descripcion"].ToString();
+                    c.Calle = this.Reader["calle"].ToString();
+                    c.NroPuerta = this.Reader["nro_puerta"].ToString();
+                    c.CodPostal = this.Reader["cod_postal"].ToString();
+                    c.Capacidad = Int32.Parse(this.Reader["capacidad"].ToString());
+                    c.Departamento = this.Reader["departamento"].ToString();
+                    return c;
+                }
+
+                return null;
             }
-
-            return null;
-
         }
 
         public List<WarehouseModel> GetAllWarehouses()
         {
-            this.Command.CommandText = "SELECT * FROM almacen";
-            this.Reader = this.Command.ExecuteReader();
-
-            List<WarehouseModel> resultado = new List<WarehouseModel>();
-
-            while (this.Reader.Read())
+            using (this.Connection)
             {
-                WarehouseModel elemento = new WarehouseModel
-                {
-                    Id = Int32.Parse(this.Reader["id"].ToString()),
-                    Descripcion = this.Reader["descripcion"].ToString(),
-                    Calle = this.Reader["calle"].ToString(),
-                    NroPuerta = this.Reader["nro_puerta"].ToString(),
-                    CodPostal = this.Reader["cod_postal"].ToString(),
-                    Capacidad = Int32.Parse(this.Reader["capacidad"].ToString()),
-                    Departamento = this.Reader["departamento"].ToString()
-                };
-                resultado.Add(elemento);
-            }
+                this.Command.CommandText = "SELECT * FROM almacen";
+                this.Reader = this.Command.ExecuteReader();
 
-            return resultado;
+                List<WarehouseModel> resultado = new List<WarehouseModel>();
+
+                while (this.Reader.Read())
+                {
+                    WarehouseModel elemento = new WarehouseModel
+                    {
+                        Id = Int32.Parse(this.Reader["id"].ToString()),
+                        Descripcion = this.Reader["descripcion"].ToString(),
+                        Calle = this.Reader["calle"].ToString(),
+                        NroPuerta = this.Reader["nro_puerta"].ToString(),
+                        CodPostal = this.Reader["cod_postal"].ToString(),
+                        Capacidad = Int32.Parse(this.Reader["capacidad"].ToString()),
+                        Departamento = this.Reader["departamento"].ToString()
+                    };
+                    resultado.Add(elemento);
+                }
+
+                return resultado;
+            }
         }
     }
 }
