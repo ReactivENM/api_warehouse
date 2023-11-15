@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Datos
 {
-    public class TruckModel : Model
+    public class TruckModel
     {
 
         public string Marca;
@@ -18,21 +18,21 @@ namespace Datos
 
         public TruckModel GetTruck(String id)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM camion WHERE id = '{id}'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT * " + $"FROM camion WHERE id = '{id}'";
+                model.Reader = model.Command.ExecuteReader();
 
                 TruckModel t = new TruckModel();
 
-                if (this.Reader.HasRows)
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Read();
-                    t.Id = Int32.Parse(this.Reader["id"].ToString());
-                    t.Marca = this.Reader["marca"].ToString();
-                    t.Modelo = this.Reader["modelo"].ToString();
-                    t.Matricula = this.Reader["matricula"].ToString();
-                    t.Capacidad = this.Reader["capacidad"].ToString();
+                    model.Reader.Read();
+                    t.Id = Int32.Parse(model.Reader["id"].ToString());
+                    t.Marca = model.Reader["marca"].ToString();
+                    t.Modelo = model.Reader["modelo"].ToString();
+                    t.Matricula = model.Reader["matricula"].ToString();
+                    t.Capacidad = model.Reader["capacidad"].ToString();
                     return t;
                 }
 
@@ -42,22 +42,22 @@ namespace Datos
 
         public List<TruckModel> GetAllTrucks()
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = "SELECT * FROM camion";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = "SELECT * FROM camion";
+                model.Reader = model.Command.ExecuteReader();
 
                 List<TruckModel> resultado = new List<TruckModel>();
 
-                while (this.Reader.Read())
+                while (model.Reader.Read())
                 {
                     TruckModel elemento = new TruckModel
                     {
-                        Id = Int32.Parse(this.Reader["id"].ToString()),
-                        Marca = this.Reader["marca"].ToString(),
-                        Modelo = this.Reader["modelo"].ToString(),
-                        Matricula = this.Reader["matricula"].ToString(),
-                        Capacidad = this.Reader["capacidad"].ToString(),
+                        Id = Int32.Parse(model.Reader["id"].ToString()),
+                        Marca = model.Reader["marca"].ToString(),
+                        Modelo = model.Reader["modelo"].ToString(),
+                        Matricula = model.Reader["matricula"].ToString(),
+                        Capacidad = model.Reader["capacidad"].ToString(),
                     };
                     resultado.Add(elemento);
                 }

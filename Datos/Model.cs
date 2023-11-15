@@ -10,9 +10,9 @@ namespace Datos
         protected string DatabasePassword;
         protected string DatabaseName;
 
-        protected MySqlConnection Connection;
-        protected MySqlCommand Command;
-        protected MySqlDataReader Reader;
+        public MySqlConnection Connection;
+        public MySqlCommand Command;
+        public MySqlDataReader Reader;
 
         public Model()
         {
@@ -37,9 +37,17 @@ namespace Datos
         // Implementación de IDisposable
         public void Dispose()
         {
-            Command?.Dispose();
-            Reader?.Dispose();
-            Connection?.Dispose();
+            try
+            {
+                Command?.Dispose();
+                Reader?.Dispose();
+                Connection?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                // Manejar excepciones, por ejemplo, registrarlas o lanzarlas nuevamente si es necesario.
+                Console.WriteLine($"Error al liberar recursos: {ex.Message}");
+            }
         }
     }
 }

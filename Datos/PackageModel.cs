@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Datos
 {
-    public class PackageModel : Model
+    public class PackageModel
     {
         public string IdExterno;
         public string IdCliente;
@@ -18,17 +18,17 @@ namespace Datos
 
         public PackageModel Save()
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText =
+                model.Command.CommandText =
                     $"INSERT INTO paquete (id_externo, id_cliente, peso, dir_envio, estado) " +
                     $"VALUES ('{this.IdExterno}','{this.IdCliente}','{this.Peso}','{this.DirEnvio}','{this.Estado}')";
 
-                this.Command.ExecuteNonQuery();
+                model.Command.ExecuteNonQuery();
 
                 PackageModel p = new PackageModel
                 {
-                    Id = (int)this.Command.LastInsertedId,
+                    Id = (int)model.Command.LastInsertedId,
                     IdExterno = this.IdExterno,
                     IdCliente = this.IdCliente,
                     Peso = this.Peso,
@@ -42,22 +42,22 @@ namespace Datos
 
         public PackageModel GetPackage(String id)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_interno = '{id}' OR id_externo = '{id}'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_interno = '{id}' OR id_externo = '{id}'";
+                model.Reader = model.Command.ExecuteReader();
 
                 PackageModel p = new PackageModel();
 
-                if (this.Reader.HasRows)
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Read();
-                    p.Id = Int32.Parse(this.Reader["id_interno"].ToString());
-                    p.IdExterno = this.Reader["id_externo"].ToString();
-                    p.IdCliente = this.Reader["id_cliente"].ToString();
-                    p.Peso = this.Reader["peso"].ToString();
-                    p.DirEnvio = this.Reader["dir_envio"].ToString();
-                    p.Estado = this.Reader["estado"].ToString();
+                    model.Reader.Read();
+                    p.Id = Int32.Parse(model.Reader["id_interno"].ToString());
+                    p.IdExterno = model.Reader["id_externo"].ToString();
+                    p.IdCliente = model.Reader["id_cliente"].ToString();
+                    p.Peso = model.Reader["peso"].ToString();
+                    p.DirEnvio = model.Reader["dir_envio"].ToString();
+                    p.Estado = model.Reader["estado"].ToString();
                     return p;
                 }
 
@@ -67,23 +67,23 @@ namespace Datos
 
         public List<PackageModel> GetAllPackages()
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = "SELECT * FROM paquete";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = "SELECT * FROM paquete";
+                model.Reader = model.Command.ExecuteReader();
 
                 List<PackageModel> resultado = new List<PackageModel>();
 
-                while (this.Reader.Read())
+                while (model.Reader.Read())
                 {
                     PackageModel elemento = new PackageModel
                     {
-                        Id = Int32.Parse(this.Reader["id_interno"].ToString()),
-                        IdExterno = this.Reader["id_externo"].ToString(),
-                        IdCliente = this.Reader["id_cliente"].ToString(),
-                        Peso = this.Reader["peso"].ToString(),
-                        DirEnvio = this.Reader["dir_envio"].ToString(),
-                        Estado = this.Reader["estado"].ToString()
+                        Id = Int32.Parse(model.Reader["id_interno"].ToString()),
+                        IdExterno = model.Reader["id_externo"].ToString(),
+                        IdCliente = model.Reader["id_cliente"].ToString(),
+                        Peso = model.Reader["peso"].ToString(),
+                        DirEnvio = model.Reader["dir_envio"].ToString(),
+                        Estado = model.Reader["estado"].ToString()
                     };
                     resultado.Add(elemento);
                 }
@@ -94,23 +94,23 @@ namespace Datos
 
         public List<PackageModel> GetAllUnassignedPackages()
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = "SELECT * FROM paquete WHERE id_externo NOT IN(SELECT id_externo_paquete FROM paquetelote)";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = "SELECT * FROM paquete WHERE id_externo NOT IN(SELECT id_externo_paquete FROM paquetelote)";
+                model.Reader = model.Command.ExecuteReader();
 
                 List<PackageModel> resultado = new List<PackageModel>();
 
-                while (this.Reader.Read())
+                while (model.Reader.Read())
                 {
                     PackageModel elemento = new PackageModel
                     {
-                        Id = Int32.Parse(this.Reader["id_interno"].ToString()),
-                        IdExterno = this.Reader["id_externo"].ToString(),
-                        IdCliente = this.Reader["id_cliente"].ToString(),
-                        Peso = this.Reader["peso"].ToString(),
-                        DirEnvio = this.Reader["dir_envio"].ToString(),
-                        Estado = this.Reader["estado"].ToString()
+                        Id = Int32.Parse(model.Reader["id_interno"].ToString()),
+                        IdExterno = model.Reader["id_externo"].ToString(),
+                        IdCliente = model.Reader["id_cliente"].ToString(),
+                        Peso = model.Reader["peso"].ToString(),
+                        DirEnvio = model.Reader["dir_envio"].ToString(),
+                        Estado = model.Reader["estado"].ToString()
                     };
                     resultado.Add(elemento);
                 }
@@ -121,23 +121,23 @@ namespace Datos
 
         public List<PackageModel> GetPackagesFromLot(string IdLote)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT paquete.* FROM paquetelote JOIN paquete ON paquetelote.id_externo_paquete = paquete.id_externo WHERE paquetelote.id_lote = '{IdLote}'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT paquete.* FROM paquetelote JOIN paquete ON paquetelote.id_externo_paquete = paquete.id_externo WHERE paquetelote.id_lote = '{IdLote}'";
+                model.Reader = model.Command.ExecuteReader();
 
                 List<PackageModel> resultado = new List<PackageModel>();
 
-                while (this.Reader.Read())
+                while (model.Reader.Read())
                 {
                     PackageModel elemento = new PackageModel
                     {
-                        Id = Int32.Parse(this.Reader["id_interno"].ToString()),
-                        IdExterno = this.Reader["id_externo"].ToString(),
-                        IdCliente = this.Reader["id_cliente"].ToString(),
-                        Peso = this.Reader["peso"].ToString(),
-                        DirEnvio = this.Reader["dir_envio"].ToString(),
-                        Estado = this.Reader["estado"].ToString()
+                        Id = Int32.Parse(model.Reader["id_interno"].ToString()),
+                        IdExterno = model.Reader["id_externo"].ToString(),
+                        IdCliente = model.Reader["id_cliente"].ToString(),
+                        Peso = model.Reader["peso"].ToString(),
+                        DirEnvio = model.Reader["dir_envio"].ToString(),
+                        Estado = model.Reader["estado"].ToString()
                     };
                     resultado.Add(elemento);
                 }
@@ -148,15 +148,15 @@ namespace Datos
 
         public string DeletePackage(string IdPaquete)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_interno = '{IdPaquete}'";
-                this.Reader = this.Command.ExecuteReader();
-                if (this.Reader.HasRows)
+                model.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_interno = '{IdPaquete}'";
+                model.Reader = model.Command.ExecuteReader();
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Close();
-                    this.Command.CommandText = $"DELETE FROM paquete WHERE id_interno = '{IdPaquete}'";
-                    this.Command.ExecuteNonQuery();
+                    model.Reader.Close();
+                    model.Command.CommandText = $"DELETE FROM paquete WHERE id_interno = '{IdPaquete}'";
+                    model.Command.ExecuteNonQuery();
                     return "Paquete eliminado!";
                 }
 
@@ -167,14 +167,14 @@ namespace Datos
 
         public string UpdatePackage(string IdPaquete, PackageModel pkg)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * FROM paquete WHERE id_interno = '{IdPaquete}'";
-                this.Reader = this.Command.ExecuteReader();
-                if (this.Reader.HasRows)
+                model.Command.CommandText = $"SELECT * FROM paquete WHERE id_interno = '{IdPaquete}'";
+                model.Reader = model.Command.ExecuteReader();
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Close();
-                    this.Command.CommandText = $"UPDATE paquete SET " +
+                    model.Reader.Close();
+                    model.Command.CommandText = $"UPDATE paquete SET " +
                         $"id_externo = '{pkg.IdExterno}', " +
                         $"id_cliente = '{pkg.IdCliente}', " +
                         $"peso = '{pkg.Peso}', " +
@@ -182,7 +182,7 @@ namespace Datos
                         $"estado = '{pkg.Estado}' " +
                         $"WHERE id_interno = '{IdPaquete}'";
 
-                    this.Command.ExecuteNonQuery();
+                    model.Command.ExecuteNonQuery();
                     return "Paquete actualizado!";
                 }
                 return "El paquete no existe!";
@@ -191,25 +191,25 @@ namespace Datos
 
         public string AssignToLot(string IdPaquete, string IdLote, string IdUsuario)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_externo = '{IdPaquete}'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT * " + $"FROM paquete WHERE id_externo = '{IdPaquete}'";
+                model.Reader = model.Command.ExecuteReader();
 
-                if (!this.Reader.HasRows) return "El paquete no existe!";
-                this.Reader.Close();
+                if (!model.Reader.HasRows) return "El paquete no existe!";
+                model.Reader.Close();
 
-                this.Command.CommandText = $"SELECT * " + $"FROM paquetelote WHERE id_externo_paquete = '{IdPaquete}'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT * " + $"FROM paquetelote WHERE id_externo_paquete = '{IdPaquete}'";
+                model.Reader = model.Command.ExecuteReader();
 
-                if (this.Reader.HasRows) return "El paquete ya está asignado a un lote!";
-                this.Reader.Close();
+                if (model.Reader.HasRows) return "El paquete ya está asignado a un lote!";
+                model.Reader.Close();
 
-                this.Command.CommandText =
+                model.Command.CommandText =
                 $"INSERT INTO paquetelote (id_externo_paquete, id_lote, id_usuario) " +
                 $"VALUES ('{IdPaquete}','{IdLote}','{IdUsuario}')";
 
-                this.Command.ExecuteNonQuery();
+                model.Command.ExecuteNonQuery();
                 return "Paquete asignado al lote exitosamente!";
             }
 
@@ -217,19 +217,19 @@ namespace Datos
 
         public string UnassignFromLot(string IdPaquete)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM paquetelote WHERE id_externo_paquete = '{IdPaquete}'";
-                this.Reader = this.Command.ExecuteReader();
-                if (this.Reader.HasRows)
+                model.Command.CommandText = $"SELECT * " + $"FROM paquetelote WHERE id_externo_paquete = '{IdPaquete}'";
+                model.Reader = model.Command.ExecuteReader();
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Close();
+                    model.Reader.Close();
                     PackageModel p = new PackageModel();
 
-                    this.Command.CommandText =
+                    model.Command.CommandText =
                     $"DELETE " + $"FROM paquetelote WHERE id_externo_paquete = '{IdPaquete}'";
 
-                    this.Command.ExecuteNonQuery();
+                    model.Command.ExecuteNonQuery();
                     return "Paquete liberado del lote exitosamente!";
                 }
                 return "El paquete no está asignado a ningún lote!";

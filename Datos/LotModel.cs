@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Datos
 {
-    public class LotModel : Model
+    public class LotModel
     {
         public string IdAlmacen;
         public string Estado;
@@ -15,17 +15,17 @@ namespace Datos
 
         public LotModel Save()
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText =
+                model.Command.CommandText =
                 $"INSERT INTO lote (id_almacen, estado) " +
                 $"VALUES ('{this.IdAlmacen}','{this.Estado}')";
 
-                this.Command.ExecuteNonQuery();
+                model.Command.ExecuteNonQuery();
 
                 LotModel l = new LotModel
                 {
-                    Id = (int)this.Command.LastInsertedId,
+                    Id = (int)model.Command.LastInsertedId,
                     IdAlmacen = this.IdAlmacen,
                     Estado = this.Estado,
                 };
@@ -36,19 +36,19 @@ namespace Datos
 
         public LotModel GetLot(String id)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM lote WHERE id = '{id}'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT * " + $"FROM lote WHERE id = '{id}'";
+                model.Reader = model.Command.ExecuteReader();
 
                 LotModel l = new LotModel();
 
-                if (this.Reader.HasRows)
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Read();
-                    l.Id = Int32.Parse(this.Reader["id"].ToString());
-                    l.IdAlmacen = this.Reader["id_almacen"].ToString();
-                    l.Estado = this.Reader["estado"].ToString();
+                    model.Reader.Read();
+                    l.Id = Int32.Parse(model.Reader["id"].ToString());
+                    l.IdAlmacen = model.Reader["id_almacen"].ToString();
+                    l.Estado = model.Reader["estado"].ToString();
                     return l;
                 }
 
@@ -59,20 +59,20 @@ namespace Datos
 
         public List<LotModel> GetAllLots()
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = "SELECT * FROM lote";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = "SELECT * FROM lote";
+                model.Reader = model.Command.ExecuteReader();
 
                 List<LotModel> resultado = new List<LotModel>();
 
-                while (this.Reader.Read())
+                while (model.Reader.Read())
                 {
                     LotModel elemento = new LotModel
                     {
-                        Id = Int32.Parse(this.Reader["id"].ToString()),
-                        IdAlmacen = this.Reader["id_almacen"].ToString(),
-                        Estado = this.Reader["estado"].ToString()
+                        Id = Int32.Parse(model.Reader["id"].ToString()),
+                        IdAlmacen = model.Reader["id_almacen"].ToString(),
+                        Estado = model.Reader["estado"].ToString()
                     };
                     resultado.Add(elemento);
                 }
@@ -83,20 +83,20 @@ namespace Datos
 
         public List<LotModel> GetAllAssignedLots(int IdCamion)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * FROM lote WHERE id IN(SELECT id_lote FROM camionlote WHERE id_camion = '{IdCamion}')";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT * FROM lote WHERE id IN(SELECT id_lote FROM camionlote WHERE id_camion = '{IdCamion}')";
+                model.Reader = model.Command.ExecuteReader();
 
                 List<LotModel> resultado = new List<LotModel>();
 
-                while (this.Reader.Read())
+                while (model.Reader.Read())
                 {
                     LotModel elemento = new LotModel
                     {
-                        Id = Int32.Parse(this.Reader["id"].ToString()),
-                        IdAlmacen = this.Reader["id_almacen"].ToString(),
-                        Estado = this.Reader["estado"].ToString()
+                        Id = Int32.Parse(model.Reader["id"].ToString()),
+                        IdAlmacen = model.Reader["id_almacen"].ToString(),
+                        Estado = model.Reader["estado"].ToString()
                     };
                     resultado.Add(elemento);
                 }
@@ -107,20 +107,20 @@ namespace Datos
 
         public List<LotModel> GetAllUnassignedLots()
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = "SELECT * FROM lote WHERE id NOT IN(SELECT id_lote FROM camionlote) AND estado = 'en_espera'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = "SELECT * FROM lote WHERE id NOT IN(SELECT id_lote FROM camionlote) AND estado = 'en_espera'";
+                model.Reader = model.Command.ExecuteReader();
 
                 List<LotModel> resultado = new List<LotModel>();
 
-                while (this.Reader.Read())
+                while (model.Reader.Read())
                 {
                     LotModel elemento = new LotModel
                     {
-                        Id = Int32.Parse(this.Reader["id"].ToString()),
-                        IdAlmacen = this.Reader["id_almacen"].ToString(),
-                        Estado = this.Reader["estado"].ToString()
+                        Id = Int32.Parse(model.Reader["id"].ToString()),
+                        IdAlmacen = model.Reader["id_almacen"].ToString(),
+                        Estado = model.Reader["estado"].ToString()
                     };
                     resultado.Add(elemento);
                 }
@@ -131,40 +131,40 @@ namespace Datos
 
         public string AssignLotToTruck(string IdLote, string IdCamion)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM camionlote WHERE id_lote = '{IdLote}'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT * " + $"FROM camionlote WHERE id_lote = '{IdLote}'";
+                model.Reader = model.Command.ExecuteReader();
 
-                if (this.Reader.HasRows) return "El lote ya está asignado a un camión!";
-                this.Reader.Close();
+                if (model.Reader.HasRows) return "El lote ya está asignado a un camión!";
+                model.Reader.Close();
 
                 LotModel L = new LotModel();
 
-                this.Command.CommandText =
+                model.Command.CommandText =
                 $"INSERT INTO camionlote (id_camion, id_lote) " +
                 $"VALUES ('{IdCamion}','{IdLote}')";
 
-                this.Command.ExecuteNonQuery();
+                model.Command.ExecuteNonQuery();
                 return "Lote asignado al camión exitosamente!";
             }
         }
 
         public string UnassignFromTruck(string IdLote)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM camionlote WHERE id_lote = '{IdLote}'";
-                this.Reader = this.Command.ExecuteReader();
-                if (this.Reader.HasRows)
+                model.Command.CommandText = $"SELECT * " + $"FROM camionlote WHERE id_lote = '{IdLote}'";
+                model.Reader = model.Command.ExecuteReader();
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Close();
+                    model.Reader.Close();
                     LotModel l = new LotModel();
 
-                    this.Command.CommandText =
+                    model.Command.CommandText =
                     $"DELETE " + $"FROM camionlote WHERE id_lote = '{IdLote}'";
 
-                    this.Command.ExecuteNonQuery();
+                    model.Command.ExecuteNonQuery();
                     return "Lote liberado del camión exitosamente!";
                 }
                 return "El lote no está asignado a ningún camión!";
@@ -173,17 +173,17 @@ namespace Datos
 
         public string DeleteLot(string IdLote)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM lote WHERE id = '{IdLote}'";
-                this.Reader = this.Command.ExecuteReader();
-                if (this.Reader.HasRows)
+                model.Command.CommandText = $"SELECT * " + $"FROM lote WHERE id = '{IdLote}'";
+                model.Reader = model.Command.ExecuteReader();
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Close();
+                    model.Reader.Close();
 
-                    this.Command.CommandText = $"DELETE " + $"FROM lote WHERE id = '{IdLote}'";
+                    model.Command.CommandText = $"DELETE " + $"FROM lote WHERE id = '{IdLote}'";
 
-                    this.Command.ExecuteNonQuery();
+                    model.Command.ExecuteNonQuery();
                     return "Lote eliminado!";
                 }
                 return "El lote no existe!";
@@ -192,25 +192,25 @@ namespace Datos
 
         public string UpdateLot(String IdLote, LotModel lot)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * FROM almacen WHERE id = '{lot.IdAlmacen}'";
-                this.Reader = this.Command.ExecuteReader();
-                if (!this.Reader.HasRows) return "El almacen ingresado no existe!";
-                this.Reader.Close();
+                model.Command.CommandText = $"SELECT * FROM almacen WHERE id = '{lot.IdAlmacen}'";
+                model.Reader = model.Command.ExecuteReader();
+                if (!model.Reader.HasRows) return "El almacen ingresado no existe!";
+                model.Reader.Close();
 
-                this.Command.CommandText = $"SELECT * FROM lote WHERE id = '{IdLote}'";
-                this.Reader = this.Command.ExecuteReader();
-                if (this.Reader.HasRows)
+                model.Command.CommandText = $"SELECT * FROM lote WHERE id = '{IdLote}'";
+                model.Reader = model.Command.ExecuteReader();
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Close();
+                    model.Reader.Close();
 
-                    this.Command.CommandText = $"UPDATE lote SET " +
+                    model.Command.CommandText = $"UPDATE lote SET " +
                         $"id_almacen = '{lot.IdAlmacen}', " +
                         $"estado = '{lot.Estado}' " +
                         $"WHERE id = '{IdLote}'";
 
-                    this.Command.ExecuteNonQuery();
+                    model.Command.ExecuteNonQuery();
 
                     return "Lote actualizado!";
                 }

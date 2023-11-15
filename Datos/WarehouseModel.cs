@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Datos
 {
-    public class WarehouseModel : Model
+    public class WarehouseModel
     {
 
         public string Descripcion;
@@ -20,23 +20,23 @@ namespace Datos
 
         public WarehouseModel GetWarehouse(String id)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM almacen WHERE id = '{id}'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT * " + $"FROM almacen WHERE id = '{id}'";
+                model.Reader = model.Command.ExecuteReader();
 
                 WarehouseModel c = new WarehouseModel();
 
-                if (this.Reader.HasRows)
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Read();
-                    c.Id = Int32.Parse(this.Reader["id"].ToString());
-                    c.Descripcion = this.Reader["descripcion"].ToString();
-                    c.Calle = this.Reader["calle"].ToString();
-                    c.NroPuerta = this.Reader["nro_puerta"].ToString();
-                    c.CodPostal = this.Reader["cod_postal"].ToString();
-                    c.Capacidad = Int32.Parse(this.Reader["capacidad"].ToString());
-                    c.Departamento = this.Reader["departamento"].ToString();
+                    model.Reader.Read();
+                    c.Id = Int32.Parse(model.Reader["id"].ToString());
+                    c.Descripcion = model.Reader["descripcion"].ToString();
+                    c.Calle = model.Reader["calle"].ToString();
+                    c.NroPuerta = model.Reader["nro_puerta"].ToString();
+                    c.CodPostal = model.Reader["cod_postal"].ToString();
+                    c.Capacidad = Int32.Parse(model.Reader["capacidad"].ToString());
+                    c.Departamento = model.Reader["departamento"].ToString();
                     return c;
                 }
 
@@ -46,24 +46,24 @@ namespace Datos
 
         public List<WarehouseModel> GetAllWarehouses()
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = "SELECT * FROM almacen";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = "SELECT * FROM almacen";
+                model.Reader = model.Command.ExecuteReader();
 
                 List<WarehouseModel> resultado = new List<WarehouseModel>();
 
-                while (this.Reader.Read())
+                while (model.Reader.Read())
                 {
                     WarehouseModel elemento = new WarehouseModel
                     {
-                        Id = Int32.Parse(this.Reader["id"].ToString()),
-                        Descripcion = this.Reader["descripcion"].ToString(),
-                        Calle = this.Reader["calle"].ToString(),
-                        NroPuerta = this.Reader["nro_puerta"].ToString(),
-                        CodPostal = this.Reader["cod_postal"].ToString(),
-                        Capacidad = Int32.Parse(this.Reader["capacidad"].ToString()),
-                        Departamento = this.Reader["departamento"].ToString()
+                        Id = Int32.Parse(model.Reader["id"].ToString()),
+                        Descripcion = model.Reader["descripcion"].ToString(),
+                        Calle = model.Reader["calle"].ToString(),
+                        NroPuerta = model.Reader["nro_puerta"].ToString(),
+                        CodPostal = model.Reader["cod_postal"].ToString(),
+                        Capacidad = Int32.Parse(model.Reader["capacidad"].ToString()),
+                        Departamento = model.Reader["departamento"].ToString()
                     };
                     resultado.Add(elemento);
                 }

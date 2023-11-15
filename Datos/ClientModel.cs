@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Datos
 {
-    public class ClientModel : Model
+    public class ClientModel
     {
 
         public string Nombre;
@@ -17,20 +17,20 @@ namespace Datos
 
         public ClientModel GetClient(String id)
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = $"SELECT * " + $"FROM cliente WHERE id = '{id}'";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = $"SELECT * " + $"FROM cliente WHERE id = '{id}'";
+                model.Reader = model.Command.ExecuteReader();
 
                 ClientModel c = new ClientModel();
 
-                if (this.Reader.HasRows)
+                if (model.Reader.HasRows)
                 {
-                    this.Reader.Read();
-                    c.Id = Int32.Parse(this.Reader["id"].ToString());
-                    c.Nombre = this.Reader["nombre"].ToString();
-                    c.Calle = this.Reader["calle"].ToString();
-                    c.Telefono = this.Reader["telefono"].ToString();
+                    model.Reader.Read();
+                    c.Id = Int32.Parse(model.Reader["id"].ToString());
+                    c.Nombre = model.Reader["nombre"].ToString();
+                    c.Calle = model.Reader["calle"].ToString();
+                    c.Telefono = model.Reader["telefono"].ToString();
                     return c;
                 }
 
@@ -40,21 +40,21 @@ namespace Datos
 
         public List<ClientModel> GetAllClients()
         {
-            using (this.Connection)
+            using (Model model = new Model())
             {
-                this.Command.CommandText = "SELECT * FROM cliente";
-                this.Reader = this.Command.ExecuteReader();
+                model.Command.CommandText = "SELECT * FROM cliente";
+                model.Reader = model.Command.ExecuteReader();
 
                 List<ClientModel> resultado = new List<ClientModel>();
 
-                while (this.Reader.Read())
+                while (model.Reader.Read())
                 {
                     ClientModel elemento = new ClientModel
                     {
-                        Id = Int32.Parse(this.Reader["id"].ToString()),
-                        Nombre = this.Reader["nombre"].ToString(),
-                        Calle = this.Reader["calle"].ToString(),
-                        Telefono = this.Reader["telefono"].ToString()
+                        Id = Int32.Parse(model.Reader["id"].ToString()),
+                        Nombre = model.Reader["nombre"].ToString(),
+                        Calle = model.Reader["calle"].ToString(),
+                        Telefono = model.Reader["telefono"].ToString()
                     };
                     resultado.Add(elemento);
                 }
