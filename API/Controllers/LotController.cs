@@ -16,6 +16,12 @@ namespace API.Controllers
             return Ok(Logica.LotController.GetAll());
         }
 
+        [Route("api/lot/assigned")]
+        public IHttpActionResult GetAllAssignedLots()
+        {
+            return Ok(Logica.LotController.GetAllAssignedLots());
+        }
+
         [Route("api/lot/unassigned")]
         public IHttpActionResult GetAllUnassignedLots()
         {

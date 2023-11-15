@@ -53,6 +53,27 @@ namespace Logica
 
         }
 
+        public static List<Dictionary<string, string>> GetAllAssignedLots()
+        {
+            LotModel lot = new LotModel();
+            List<LotModel> _l = lot.GetAllAssignedLots();
+
+            List<Dictionary<string, string>> resultado = new List<Dictionary<string, string>>();
+
+            foreach (LotModel l in _l)
+            {
+                Dictionary<string, string> elemento = new Dictionary<string, string>();
+                elemento.Add("Id", l.Id.ToString());
+                elemento.Add("Id_Almacen", l.IdAlmacen.ToString());
+                elemento.Add("Estado", l.Estado.ToString());
+
+                resultado.Add(elemento);
+            }
+            return resultado;
+
+
+        }
+
         public static List<Dictionary<string, string>> GetAllUnassignedLots()
         {
             LotModel lot = new LotModel();
