@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TruckModel.cs" />
     <Compile Include="WarehouseModel.cs" />
     <Compile Include="ClientModel.cs" />
     <Compile Include="Model.cs" />
