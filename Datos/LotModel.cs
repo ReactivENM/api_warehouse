@@ -72,9 +72,9 @@ namespace Datos
             return resultado;
         }
 
-        public List<LotModel> GetAllAssignedLots()
+        public List<LotModel> GetAllAssignedLots(int IdCamion)
         {
-            this.Command.CommandText = "SELECT * FROM lote WHERE id IN(SELECT id_lote FROM camionlote)";
+            this.Command.CommandText = $"SELECT * FROM lote WHERE id IN(SELECT id_lote FROM camionlote WHERE id_camion = '{IdCamion}')";
             this.Reader = this.Command.ExecuteReader();
 
             List<LotModel> resultado = new List<LotModel>();

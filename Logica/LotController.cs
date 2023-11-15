@@ -53,10 +53,10 @@ namespace Logica
 
         }
 
-        public static List<Dictionary<string, string>> GetAllAssignedLots()
+        public static List<Dictionary<string, string>> GetAllAssignedLots(int IdCamion)
         {
             LotModel lot = new LotModel();
-            List<LotModel> _l = lot.GetAllAssignedLots();
+            List<LotModel> _l = lot.GetAllAssignedLots(IdCamion);
 
             List<Dictionary<string, string>> resultado = new List<Dictionary<string, string>>();
 
